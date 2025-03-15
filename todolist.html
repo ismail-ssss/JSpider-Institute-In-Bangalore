@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODO LIST</title>
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container-flued bg-dark w-50 m-auto text-center p-3 rounded">
+      <h1 class="text-white">TODO LIST</h1>
+      <div class="row">
+        <div class="col mt-2">
+          <input
+            id="todonameel"
+            class="w-50 rounded"
+            type="text "
+            placeholder="Todo name"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mt-2">
+          <textarea
+            id="todosmgel"
+            class="w-50 rounded"
+            type="text"
+            placeholder="Massege"
+          ></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mt-2">
+          <button onclick="add()" class="w-50 btn btn-outline-danger">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="listel" class="container-flued"></div>
+
+    <script>
+      function add() {
+        let todoname = document.getElementById("todonameel").value;
+        let todosmg = document.getElementById("todosmgel").value;
+
+        if (!todoname || !todosmg) {
+          alert("Please enter a todo name and message!");
+          return;
+        }
+
+        let todos = JSON.parse(localStorage.getItem("todos")) || [];
+        let newTodo = { name: todoname, message: todosmg };
+        todos.push(newTodo);
+        localStorage.setItem("todos", JSON.stringify(todos));
+        displayTodos();
+      }
+
+      function displayTodos() {
+          let list = document.getElementById("listel");
+          list.innerHTML = ""; 
+
+          let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+          todos.forEach((todo, index) => {
+              const newDiv = document.createElement("div");
+              newDiv.className = "mt-5 m-auto w-50 border rounded";
+              newDiv.innerHTML = `
+                  <div class="row m-auto rounded">
+                      <div class="col">
+                          <h4>${todo.name}</h4>
+                          <hr style="margin-top: -5px;"/>
+                          <pre>${todo.message}</pre>
+                      </div>
+                      <div class="col-4 mt-2">
+                          <button class="btn btn-outline-danger m-3" onclick="deleteTodo(${index})">Delete</button>
+                      </div>
+                  </div>
+              `;
+              list.prepend(newDiv);
+          });
+      }
+
+      function deleteTodo(index) {
+          let todos = JSON.parse(localStorage.getItem("todos")) || [];
+          todos.splice(index, 1);
+          localStorage.setItem("todos", JSON.stringify(todos));
+          displayTodos();
+      }
+
+      document.addEventListener("DOMContentLoaded", displayTodos);
+    </script>
+  </body>
+</html>
